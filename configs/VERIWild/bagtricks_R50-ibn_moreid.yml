@@ -1,0 +1,49 @@
+_BASE_: ../Base-bagtricks.yml
+
+INPUT:
+  SIZE_TRAIN: [256, 256]
+  SIZE_TEST: [256, 256]
+
+MODEL:
+  META_ARCHITECTURE: "MoReID"
+
+  BACKBONE:
+    WITH_IBN: True
+
+  HEADS:
+    POOL_LAYER: GeneralizedMeanPoolingP
+
+  LOSSES:
+    NAME: ("CrossEntropyLoss", "WeightedTripletLoss",)
+
+    TRI:
+      HARD_MINING: False
+      MARGIN: 0.0
+
+DATASETS:
+  NAMES: ("VeRiWild",)
+  TESTS: ("SmallVeRiWild", "MediumVeRiWild", "LargeVeRiWild",)
+
+SOLVER:
+  OPT: SGD
+  NESTEROV: True
+  BASE_LR: 0.02
+  BIAS_LR_FACTOR: 1.
+  ETA_MIN_LR: 0.0000007 #7.7e-5
+  IMS_PER_BATCH: 512 # 512 For 4 GPUs
+  MAX_EPOCH: 120
+
+  SCHED: CosineAnnealingLR
+  DELAY_EPOCHS: 30
+  ETA_MIN_LR: 0.0000007
+
+  WARMUP_ITERS: 5000
+  FREEZE_ITERS: 2500
+
+  CHECKPOINT_PERIOD: 20
+
+TEST:
+  EVAL_PERIOD: 10
+  IMS_PER_BATCH: 128
+
+OUTPUT_DIR: logs/veriwild/bagtricks_R50-ibn_4gpu

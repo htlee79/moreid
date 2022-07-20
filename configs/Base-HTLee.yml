@@ -1,0 +1,14 @@
+_BASE_: Base-SBS.yml
+
+MODEL:
+  #FREEZE_LAYERS: [ encoder_q ]
+
+  LOSSES:
+    NAME: ("CrossEntropyLoss", "HeLoss",)
+
+SOLVER:
+  CLIP_GRADIENTS:
+    ENABLED: False
+
+DATALOADER:
+  NUM_INSTANCE: 16
